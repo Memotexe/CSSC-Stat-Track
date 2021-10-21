@@ -1,5 +1,10 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
+
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(cors());
 
 const db = require('./models');
 
@@ -15,8 +20,11 @@ app.use("/mentee_sessions", menteeSessionsRouter);
 const mentorSessionsRouter = require('./routes/mentor_sessions');
 app.use("/mentor_sessions", mentorSessionsRouter);
 
-// const adminRouter = require('./routes/admin');
-// app.use("/admin", adminRouter);
+const adminRouter = require('./routes/admin');
+app.use("/admin", adminRouter);
+
+const authRouter = require('./routes/auth');
+app.use("/auth", authRouter);
 
 db.sequelize.sync().then(() => {
     app.listen(4002, ()=> {

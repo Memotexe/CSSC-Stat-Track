@@ -2,24 +2,22 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const admin = db.admin;
+const bcrypt = require("bcrypt");
 
 
-router.get("/", async (req,res) =>{
-    const listOfData = await admin.findAll({
-        where: {
-            "admin_id": 1
-        }
+router.post("/AddAdmin", async (req,res)=>{
+    const {email, password, firstname, lastname, active} = req.body; 
+    console.log(req.body);
+    bcrypt.hash(password, 10).then((hash) => {
+        admin.create({
+            email: email,
+            password: hash, 
+            firstname: firstname,
+            lastname: lastname,
+            active:active
+        });
     });
-    res.json(listOfData);
-});
-
-router.post("/AddUser", async (req,res)=>{
-    const mentorsData = {
-        email: "test@pfw.edu",
-        firstname: "Almighty",
-        lastname: "Root"
-    };
-    res.json(mentors.create(mentorsData));
+    res.json({result: "Success"});
 });
 
 module.exports = router; 

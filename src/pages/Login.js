@@ -17,7 +17,7 @@ const Login = () => {
             } else {
                 console.log("TEST");
                 sessionStorage.setItem("accessToken", response.data);
-                history.push("/home");
+                history.push("/adminPanel");
             }
         });
     };

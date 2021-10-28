@@ -34,11 +34,11 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-db.mentors.hasMany(db.mentor_sessions);
-db.mentor_sessions.belongsTo(db.mentors);
-db.mentor_sessions.hasMany(db.mentee_sessions);
-db.mentee_sessions.belongsTo(db.mentor_sessions);
-db.mentees.hasMany(db.mentee_sessions);
-db.mentee_sessions.belongsTo(db.mentees);
+db.mentor.hasMany(db.mentor_session);
+db.mentor_session.belongsTo(db.mentor);
+db.mentor_session.hasMany(db.mentee_session);
+db.mentee_session.belongsTo(db.mentor_session);
+db.mentee.hasMany(db.mentee_session);
+db.mentee_session.belongsTo(db.mentee);
 
 module.exports = db;

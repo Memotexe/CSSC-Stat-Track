@@ -1,26 +1,29 @@
+const Sequelize = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
-    const Mentees = sequelize.define("mentees", {
+    const Mentee = sequelize.define("mentee", {
         email:{
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false,
         },
         mentee_id:{
-            type: DataTypes.INTEGER,
+            type: Sequelize.INTEGER,
             allowNull:false,
             primaryKey: true,
             autoIncrement: true
         },
         firstname:{
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false
         },
         lastname:{
-            type: DataTypes.STRING,
+            type: Sequelize.STRING,
             allowNull: false
         }
     },
     { 
-        underscored: true
+        underscored: true,
+        freezeTableName: true
     });
-    return Mentees;
+    return Mentee;
 }

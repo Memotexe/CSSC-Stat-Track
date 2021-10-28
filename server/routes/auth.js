@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const admin = db.admin;
-const mentor = db.mentors;
+const mentor = db.mentor;
 const bcrypt = require("bcrypt");
 
 const {sign} = require('jsonwebtoken');
@@ -12,12 +12,14 @@ router.post("/login", async (req, res) => {
 
     const adminUser = await admin.findOne({
         where: {
-            email : email
+            email : email,
+            active : 1
         }
     });
     const mentorUser = await mentor.findOne({
         where: {
-            email : email
+            email : email,
+            active : 1
         }
     });
 

@@ -1,7 +1,7 @@
-const Homepage = () =>{
+const MentorPanel = () =>{
     return (
         <p>P<strong>EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE</strong>Nis</p>
     );
 }
 
-export default Homepage
+export default MentorPanel

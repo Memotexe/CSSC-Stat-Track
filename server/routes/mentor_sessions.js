@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const mentor_sessions = db.mentor_sessions;
+const mentor_session = db.mentor_session;
 
 
 router.get("/", async (req,res) =>{
-    const listOfData = await mentors.findAll({
+    const listOfData = await mentor_session.findAll({
         where: {
             "mentor_id": 1
         }
@@ -18,7 +18,7 @@ router.post("/MentorSessionPost", async (req,res)=>{
         mentor_login: "temp",
         mentor_logout: "temp",
     };
-    res.json(mentors.create(mentorsData));
+    res.json(mentor_session.create(mentorsData));
 });
 
 module.exports = router; 

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 
 module.exports =  (sequelize, DataTypes) => {
-    const Mentors = sequelize.define("mentors", {
+    const Mentor = sequelize.define("mentor", {
         mentor_id:{
             type: Sequelize.INTEGER,
             allowNull:false,
@@ -31,8 +31,9 @@ module.exports =  (sequelize, DataTypes) => {
 
     },
     {
-        underscored: true
+        underscored: true,
+        freezeTableName: true
     });
 
-    return Mentors;
+    return Mentor;
 }

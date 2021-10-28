@@ -1,31 +1,31 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const Admin = sequelize.define("admin", {
-        admin_id: {
+    const Mentee_Session = sequelize.define("mentee_session", {
+        mentee_session_id:{
             type: Sequelize.INTEGER,
             allowNull: false,
-            primaryKey: true,
             autoIncrement: true,
+            primaryKey:true
         },
-        email: {
+        login:{
+            type: Sequelize.DATE,
+            allowNull: false,
+        },
+        logout:{
+            type: Sequelize.DATE,
+            allowNull: false,
+        },
+        class:{
             type: Sequelize.STRING,
             allowNull: false,
         },
-        password: {
+        assigment:{
             type: Sequelize.STRING,
             allowNull: false,
         },
-        firstname: {
+        comment:{
             type: Sequelize.STRING,
-            allowNull: false,
-        },
-        lastname: {
-            type: Sequelize.STRING,
-            allowNull: false,
-        },
-        active: {
-            type: Sequelize.INTEGER,
             allowNull: false,
         }
     },
@@ -34,5 +34,5 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
     });
 
-    return Admin;
+    return Mentee_Session;
 }

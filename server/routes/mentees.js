@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../models");
-const mentees = db.mentees;
+const mentee = db.mentee;
 
 
 router.get("/", async (req,res) =>{
-    const listOfData = await mentees.findAll({
+    const listOfData = await mentee.findAll({
         where: {
             "mentee_id": 1
         }
@@ -19,7 +19,7 @@ router.post("/", async (req,res)=>{
         firstname: "first",
         lastname: "lastname"
     };
-    res.json(mentees.create(menteesData));
+    res.json(mentee.create(menteesData));
 });
 
 module.exports = router; 

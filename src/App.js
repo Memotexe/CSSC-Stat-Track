@@ -16,7 +16,7 @@ function App() {
         <Route path="/" exact component={Login}></Route>
         <PrivateRoute path="/menteeSignIn" exact component={MenteeSignin}></PrivateRoute>
         <PrivateRoute path="/mentorPanel" exact component={MentorPanel}></PrivateRoute>
-        <PrivateRoute path="/adminPanel" exact component={AdminPanel}></PrivateRoute>
+        <Route path="/adminPanel" exact component={AdminPanel}></Route>
       </Switch>
     </Router>
   );

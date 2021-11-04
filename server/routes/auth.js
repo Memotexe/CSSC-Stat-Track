@@ -4,8 +4,12 @@ const db = require("../models");
 const admin = db.admin;
 const mentor = db.mentor;
 const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
-const {sign} = require('jsonwebtoken');
+
+const {sign, decode, verify} = require('jsonwebtoken');
+
+const tokenTable = {};
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -16,6 +20,7 @@ router.post("/login", async (req, res) => {
             active : 1
         }
     });
+
     const mentorUser = await mentor.findOne({
         where: {
             email : email,
@@ -23,22 +28,40 @@ router.post("/login", async (req, res) => {
         }
     });
 
+    console.log(mentorUser);
+    console.log(adminUser);
     if (adminUser) {
         bcrypt.compare(password, adminUser.password).then((match) =>{
-            if(!match) res.json({error: "Wrong Username or Password Combination", result: "Failure"});
-            const accessToken = sign(
-                { email: adminUser.email },
-                "secrettoken"
-            );
-           res.json({data: accessToken});
+            if(!match) {
+                res.json({error: "Wrong Username or Password Combination", result: "Failure"});
+                return;
+            }
+            var accessToken = undefined;
+            const secretKey = crypto.randomUUID();
+            accessToken = sign({ email: adminUser.email,accessLevel: 1 }, secretKey).toString();
+            if (accessToken === undefined) {
+                res.json({error: "An error occurred while creating your access token", result: "Failure"});
+                return;
+            }
+            console.log(accessToken);
+            tokenTable[accessToken] = secretKey;
+            console.log("SECRET="+secretKey);
+            res.json({data: accessToken});
         });
     } else if (mentorUser) {
         bcrypt.compare(password, mentorUser.password).then((match) =>{
-            if(!match) res.json({error: "Wrong Username or Password Combination", result: "Failure"});
-            const accessToken = sign(
-                { email: mentorUser.email },
-                "secrettoken"
-            );
+            if(!match) {
+                res.json({error: "Wrong Username or Password Combination", result: "Failure"});
+                return;
+            }
+            var accessToken = undefined;
+            const secretKey = crypto.randomUUID();
+            accessToken = sign({ email: mentorUser.email,accessLevel: 0 }, secretKey).toString();
+            if (accessToken === undefined) {
+                res.json({error: "An error occurred while creating your access token", result: "Failure"});
+                return;
+            }
+            tokenTable[accessToken] = secretKey;
             res.json({data: accessToken});
         });
     } else {
@@ -77,19 +100,17 @@ router.post("/create", async (req, res) => {
 
 });
 
-router.post("/AddAdmin", async (req,res)=>{
-    const {email, password, firstname, lastname, active} = req.body; 
-    console.log(req.body);
-    bcrypt.hash(password, 10).then((hash) => {
-        admin.create({
-            email: email,
-            password: hash, 
-            firstname: firstname,
-            lastname: lastname,
-            active:active
-        });
-    });
-    res.json({result: "Success"});
-});
+const isAuth = (accessToken, needsLevel) => {
+    console.log("AAAAAAAAAA")
+    console.log(accessToken);
+    console.log(tokenTable[accessToken]);
+    var dec = verify(accessToken, tokenTable[accessToken]).accessLevel;
+    if (dec.accessLevel == needsLevel) return true; 
+    else return false;
+};
 
-module.exports = router; 
+module.exports = {
+    router:router,
+    isAuth:isAuth,
+    tokens:tokenTable
+}

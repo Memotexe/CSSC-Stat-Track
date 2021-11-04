@@ -1,12 +1,13 @@
 const {verify} = require("jsonwebtoken");
+const {tokens} = require("../routes/auth");
 
 const validateToken = (req, res, next) =>{
     const accessToken = req.Headers("accessToken");
 
-    if(!accessToken) return res.json({error: "Uers not logged in!"})
-
+    if(!accessToken || tokens[accessToken] === undefined) return res.json({error: "Uers not logged in!"})
+    console.log("TESATTTTTTTTTTTTTTTTTTTTTTTTT")
     try{
-        const validToken = verify(accessToken, "secrettoken");
+        const validToken = verify(accessToken, tokens[accessToken]);
 
         if(validToken){
             return next();

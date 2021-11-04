@@ -16,7 +16,8 @@ const Login = () => {
                 alert(response.data.error);
             } else {
                 console.log("TEST");
-                sessionStorage.setItem("accessToken", response.data);
+                sessionStorage.setItem("accessToken", response.data.data);
+                
                 history.push("/adminPanel");
             }
         });

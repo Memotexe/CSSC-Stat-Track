@@ -1,7 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../models");
-const mentee = db.mentee;
 
 
 router.get("/", async (req,res) =>{
@@ -12,6 +10,8 @@ router.get("/", async (req,res) =>{
     });
     res.json(listOfData);
 });
+
+
 
 router.post("/", async (req,res)=>{
     const menteesData = {

@@ -16,7 +16,7 @@ const Navbar = (props) => {
         <div id="navbarMain" className="navbar-menu">
           <div className="navbar-start">
             {props.buttons.map((component, index) => {
-              {console.log(component)}
+              
                 return <>{component}</>
             })}
           </div>

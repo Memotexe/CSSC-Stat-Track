@@ -1,17 +1,19 @@
 #table {
+    
     background-color: rgb(235, 235, 235);
     border-radius: 20px;
     height: 100%;
 }
 
 .table {
-    thead > tr {
-        background-color: gray;
+    thead th {
+        background-color: rgb(43, 43, 43);
+        color: white;
     }
 
     tbody > tr {
         &:nth-child(even) {
-            background-color: lightgoldenrodyellow;
+            background-color: #cfb991ff;
         }
     }
 }

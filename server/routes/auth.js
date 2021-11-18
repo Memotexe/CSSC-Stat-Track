@@ -70,6 +70,16 @@ router.post("/login", async (req, res) => {
     
 });
 
+router.post("/logout", async (req, res) => {
+    const {accessToken} = req.body;
+    if (accessToken == undefined || tokenTable[accessToken] === undefined) {
+        res.json({error: "User not logged in", result: "Failure"});
+    } else {
+        tokenTable[accessToken] = null;
+        res.json({error: "User logged out", result: "Success"});
+    }
+});
+
 router.post("/create", async (req, res) => {
     const { email, firstname, lastname, type } = req.body;
 

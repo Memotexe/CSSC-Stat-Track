@@ -4,7 +4,7 @@ import "../styles/datagrid.scss"
 const DataGrid = (props) => {
 
     return (
-        <div className={"container is-fluid is-justify-content-center column is-three-quarters " + props.className } id="table">
+        <div className={"container is-fluid is-justify-content-center column is-three-quarters "} id="table">
             <table className="table m-auto">
                 <thead>
                     <tr>
@@ -14,12 +14,16 @@ const DataGrid = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{props.data[0].name}</td>
-                        <td>{props.data[0].email}</td>
-                        <td>{props.data[0].active}</td>
-                        <td><button name="D"/><button name="E"/><button name="A"/></td>
-                    </tr>
+                    {props.data[0].map((row, index) => {
+                        return <tr>
+                            {props.columns.map((row2, columnIndex) => {
+                                if (props.data[columnIndex] === undefined) return <td></td>;
+                                else if (props.data[columnIndex][index] === undefined) return <td></td>;
+                                return <td>{props.data[columnIndex][index]}</td>
+                            })}
+                            {/* <td><button name="D"/><button name="E"/><button name="A"/></td> */}
+                        </tr>
+                    })}
                 </tbody>
             </table>
         </div>
@@ -27,13 +31,8 @@ const DataGrid = (props) => {
 }
 
 DataGrid.defaultProps = {
-    className: "",
     columns: [],
-    data:[{
-        name: "gup",
-        email: "gup@pfw.edu",
-        active: 1
-    }]
+    data: [[]]
 }
 
 export default DataGrid

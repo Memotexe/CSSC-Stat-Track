@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import './App.css';
+import './styles/base.scss';
 import 'bulma/css/bulma.min.css'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import Login from './pages/Login'

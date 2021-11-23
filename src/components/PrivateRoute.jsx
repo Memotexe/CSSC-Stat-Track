@@ -3,7 +3,7 @@ import {Route, Redirect, useHistory} from "react-router-dom";
 import axios from "axios";
 
 
-class PrivateRoute2 extends React.Component {
+class PrivateRoute extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,7 +14,7 @@ class PrivateRoute2 extends React.Component {
     componentDidMount() {
 
         axios.post("http://localhost:4002/auth/validate", ({token: sessionStorage.getItem("accessToken"), authLevel: this.props.authLevel})).then((res) => {
-            // console.log(res);
+
             console.log(res.status);
             if (res.status === 200) {
                 this.setState((state, props) => {
@@ -22,7 +22,6 @@ class PrivateRoute2 extends React.Component {
                         authenticated: true
                     };
                 });
-                // return <ReactChild {...props}/>;
             }
             else {
                 this.setState((state, props) => {
@@ -30,7 +29,6 @@ class PrivateRoute2 extends React.Component {
                         authenticated: false
                     };
                 });
-                // history.push("/");
             }
         });
     }
@@ -50,4 +48,4 @@ class PrivateRoute2 extends React.Component {
     };
 }
 
-export default PrivateRoute2
+export default PrivateRoute

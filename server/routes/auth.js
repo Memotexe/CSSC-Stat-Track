@@ -28,8 +28,6 @@ router.post("/login", async (req, res) => {
         }
     });
 
-    // console.log(mentorUser);
-    // console.log(adminUser);
     if (adminUser) {
         bcrypt.compare(password, adminUser.password).then((match) =>{
             if(!match) {
@@ -83,8 +81,6 @@ router.post("/logout", async (req, res) => {
 router.post("/create", async (req, res) => {
     const { email, firstname, lastname, type } = req.body;
 
-    //TODO random hash generation
-    //TODO add failure handling
     var password = "RANDOM_HASH";
     if (type.toLowerCase() === "mentor") {
         bcrypt.hash(password, 10).then((hash) => {
@@ -116,9 +112,6 @@ router.post("/validate", (req, res) => {
 });
 
 const isAuth = (accessToken, needsLevel) => {
-    // console.log("AAAAAAAAAA")
-    // console.log(accessToken);
-    // console.log(tokenTable[accessToken]);
     if (tokenTable[accessToken] === undefined) {
         return false;
     }

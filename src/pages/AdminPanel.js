@@ -18,7 +18,8 @@ class AdminPanel extends React.Component {
     }
 
     componentDidMount() {
-        axios.get('http://localhost:4002/Admin/M;All').then(function (response) {
+        console.log("adminpanel.js: " + "HELLO")
+        axios.post('http://localhost:4002/Admin/M;All', {token: sessionStorage.getItem("accessToken"), authLevel: 1}).then(response => {
             return response.data;
         }).then((res) => {
             let mentors = [];

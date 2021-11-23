@@ -9,7 +9,7 @@ const crypto = require("crypto");
 
 const {sign, decode, verify} = require('jsonwebtoken');
 
-const tokenTable = {};
+const tokenTable = {"test": 'HELLO'};
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -28,8 +28,8 @@ router.post("/login", async (req, res) => {
         }
     });
 
-    console.log(mentorUser);
-    console.log(adminUser);
+    // console.log(mentorUser);
+    // console.log(adminUser);
     if (adminUser) {
         bcrypt.compare(password, adminUser.password).then((match) =>{
             if(!match) {
@@ -110,10 +110,18 @@ router.post("/create", async (req, res) => {
 
 });
 
+router.post("/validate", (req, res) => {
+    console.log("auth.js: " + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+    res.status(200).json({success: "Fact!"});
+});
+
 const isAuth = (accessToken, needsLevel) => {
-    console.log("AAAAAAAAAA")
-    console.log(accessToken);
-    console.log(tokenTable[accessToken]);
+    // console.log("AAAAAAAAAA")
+    // console.log(accessToken);
+    // console.log(tokenTable[accessToken]);
+    if (tokenTable[accessToken] === undefined) {
+        return false;
+    }
     var dec = verify(accessToken, tokenTable[accessToken]).accessLevel;
     if (dec.accessLevel == needsLevel) return true; 
     else return false;

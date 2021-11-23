@@ -4,12 +4,10 @@ const db = require("../models");
 const admin = db.admin;
 const mentor = db.mentor;
 const bcrypt = require("bcrypt");
-const { isAuth } = require("./auth.js");
-const {validateToken} = require("../middlewares/authmiddleware")
 
 router.post("/AddAdmin", async (req,res)=>{
     const {email, password, firstname, lastname, active, accessToken} = req.body;
-    console.log("test=" + isAuth(accessToken));
+    // console.log("test=" + isAuth(accessToken));
     bcrypt.hash(password, 10).then((hash) => {
         admin.create({
             email: email,
@@ -24,7 +22,7 @@ router.post("/AddAdmin", async (req,res)=>{
 
 router.post("/AddMentor", async (req,res)=>{
     const {email, password, firstname, lastname, active} = req.body; 
-    console.log(req.body);
+    // console.log(req.body);
     bcrypt.hash(password, 10).then((hash) => {
         mentor.create({
             email: email,
@@ -37,7 +35,8 @@ router.post("/AddMentor", async (req,res)=>{
     res.json({result: "Success"});
 });
 
-router.get("/M;All", async(req,res)=>{
+router.post("/M;All", async(req,res)=>{
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     await mentor.findAll().then(data =>{
         res.json(data)
     }).catch(err =>{

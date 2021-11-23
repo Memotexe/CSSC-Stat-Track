@@ -14,9 +14,9 @@ function App() {
     <Router>
       <Switch>
         <Route path="/" exact component={Login}></Route>
-        <PrivateRoute path="/menteeSignIn" exact component={MenteeSignin}></PrivateRoute>
-        <PrivateRoute path="/mentorPanel" exact component={MentorPanel}></PrivateRoute>
-        <Route path="/adminPanel" exact component={AdminPanel}></Route>
+        <PrivateRoute path="/menteeSignIn" exact component={MenteeSignin} authLevel={0}></PrivateRoute>
+        <PrivateRoute path="/mentorPanel" exact component={MentorPanel} authLevel={0}></PrivateRoute>
+        <PrivateRoute path="/adminPanel" exact component={AdminPanel} authLevel={1}></PrivateRoute>
       </Switch>
     </Router>
   );

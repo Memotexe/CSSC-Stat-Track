@@ -6,6 +6,7 @@ const {validateToken} = require("./middlewares/authmiddleware")
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+app.use(validateToken);
 
 const db = require('./models');
 
@@ -26,8 +27,6 @@ app.use("/admin", adminRouter);
 
 const authRouter = require('./routes/auth');
 app.use("/auth", authRouter.router);
-
-app.use(validateToken);
 
 db.sequelize.sync().then(() => {
     app.listen(4002, ()=> {

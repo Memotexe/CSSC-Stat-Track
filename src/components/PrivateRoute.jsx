@@ -1,27 +1,53 @@
-import React, { useEffect, useState } from "react";
-import {Route, Redirect} from "react-router-dom";
+import React, {Component, ReactChild} from "react";
+import {Route, Redirect, useHistory} from "react-router-dom";
+import axios from "axios";
 
-const PrivateRoute = ({component: Component, ...otherProps}) => {
-    const isAuth = sessionStorage.getItem("accessToken");
-    
-    const [isAuthorized, setIsAuthorized] = useState();
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+class PrivateRoute2 extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            authenticated: undefined
+        };
+    }
 
-    });
+    componentDidMount() {
 
-    return (
-        <>
+        axios.post("http://localhost:4002/auth/validate", ({token: sessionStorage.getItem("accessToken"), authLevel: this.props.authLevel})).then((res) => {
+            // console.log(res);
+            console.log(res.status);
+            if (res.status === 200) {
+                this.setState((state, props) => {
+                    return {
+                        authenticated: true
+                    };
+                });
+                // return <ReactChild {...props}/>;
+            }
+            else {
+                this.setState((state, props) => {
+                    return {
+                        authenticated: false
+                    };
+                });
+                // history.push("/");
+            }
+        });
+    }
 
-        </>
-        // <Route
-        //     {...otherProps}
-        //     render={(props) => 
-        //         isAuth ? <Component {...props}/> : <Redirect to="/"/>
-        //     }
-        // />
-    );
-};
+    render() {
+        if (this.state.authenticated === undefined) {
+            console.log("UNDEFINED");
+            return <p>Loading</p>;
+        } else if (this.state.authenticated) {
+            console.log("TRUE");
+            const Passed = this.props.component;
+            return <Passed />
+        } else {
+            console.log("false");
+            return <Redirect to="/"/>;
+        }
+    };
+}
 
-export default PrivateRoute
+export default PrivateRoute2

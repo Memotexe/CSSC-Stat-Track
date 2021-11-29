@@ -9,7 +9,7 @@ const crypto = require("crypto");
 
 const {sign, decode, verify} = require('jsonwebtoken');
 
-const tokenTable = {"test": 'HELLO'};
+const tokenTable = {};
 
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -31,36 +31,34 @@ router.post("/login", async (req, res) => {
     if (adminUser) {
         bcrypt.compare(password, adminUser.password).then((match) =>{
             if(!match) {
-                res.json({error: "Wrong Username or Password Combination", result: "Failure"});
+                res.status(403).json({error: "Wrong Username or Password Combination", result: "Failure"});
                 return;
             }
             var accessToken = undefined;
             const secretKey = crypto.randomUUID();
             accessToken = sign({ email: adminUser.email,accessLevel: 1 }, secretKey).toString();
             if (accessToken === undefined) {
-                res.json({error: "An error occurred while creating your access token", result: "Failure"});
+                res.status(500).json({error: "An error occurred while creating your access token", result: "Failure"});
                 return;
             }
-            console.log(accessToken);
             tokenTable[accessToken] = secretKey;
-            console.log("SECRET="+secretKey);
-            res.json({data: accessToken});
+            res.status(200).json({data: accessToken, result: "Success", redirect_url: "/adminPanel"});
         });
     } else if (mentorUser) {
         bcrypt.compare(password, mentorUser.password).then((match) =>{
             if(!match) {
-                res.json({error: "Wrong Username or Password Combination", result: "Failure"});
+                res.status(403).json({error: "Wrong Username or Password Combination", result: "Failure"});
                 return;
             }
             var accessToken = undefined;
             const secretKey = crypto.randomUUID();
             accessToken = sign({ email: mentorUser.email,accessLevel: 0 }, secretKey).toString();
             if (accessToken === undefined) {
-                res.json({error: "An error occurred while creating your access token", result: "Failure"});
+                res.status(500).json({error: "An error occurred while creating your access token", result: "Failure"});
                 return;
             }
             tokenTable[accessToken] = secretKey;
-            res.json({data: accessToken});
+            res.status(200).json({data: accessToken, result: "Success", redirect_url: "/mentorPanel"});
         });
     } else {
         res.json({error: "User Doesn't Exist", result: "Failure"});
@@ -107,21 +105,11 @@ router.post("/create", async (req, res) => {
 });
 
 router.post("/validate", (req, res) => {
-    console.log("auth.js: " + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-    res.status(200).json({success: "Fact!"});
+    console.log("auth.js " + req.accessLevel);
+    res.status(200).json({result: "Success!"});
 });
-
-const isAuth = (accessToken, needsLevel) => {
-    if (tokenTable[accessToken] === undefined) {
-        return false;
-    }
-    var dec = verify(accessToken, tokenTable[accessToken]).accessLevel;
-    if (dec.accessLevel == needsLevel) return true; 
-    else return false;
-};
 
 module.exports = {
     router:router,
-    isAuth:isAuth,
     tokens:tokenTable
 }

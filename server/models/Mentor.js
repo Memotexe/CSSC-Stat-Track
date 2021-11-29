@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports =  (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
     const Mentor = sequelize.define("mentor", {
         mentor_id:{
             type: Sequelize.INTEGER,

@@ -7,6 +7,7 @@ import NavBar from "../components/Navbar";
 import Button from "../components/Button";
 
 const SignIn = () => {
+    document.title="Mentee Signin";
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [course, setCourse] = useState("");

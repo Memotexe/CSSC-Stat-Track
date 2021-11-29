@@ -5,15 +5,27 @@
 }
 
 .table {
+    text-align: center;
     thead th {
         background-color: rgb(43, 43, 43);
         color: white;
-        width: 100%;
+        width: 100%; 
     }
 
     tbody > tr {
         &:nth-child(even) {
             background-color: #cfb991ff;
-        }
+        }   
+        width: 100%;
     }
+}
+
+.datagrid-button{
+    box-shadow: none;
+    width: 60%;
+    background-color: white;
+    border-width: .5px;
+    height: 100%;
+    cursor: pointer;
+    &:hover{background-color: #f0f1f5;}
 }

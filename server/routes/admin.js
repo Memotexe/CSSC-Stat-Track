@@ -5,8 +5,12 @@ const admin = db.admin;
 const mentor = db.mentor;
 const bcrypt = require("bcrypt");
 
-router.post("/AddAdmin", async (req,res)=>{
-    const {email, password, firstname, lastname, active, accessToken} = req.body;
+router.post("/createadmin", async (req,res)=>{
+    const {email, password, firstname, lastname, active, accessLevel} = req.body;
+    if (accessLevel != 1) {
+        res.status(401).json({message: "You are not authorized for this action.", result: "Failure"});
+        return;
+    }
     bcrypt.hash(password, 10).then((hash) => {
         admin.create({
             email: email,
@@ -16,11 +20,15 @@ router.post("/AddAdmin", async (req,res)=>{
             active:active
         });
     });
-    res.json({result: "Success"});
+    res.status(200).json({result: "Success"});
 });
 
-router.post("/AddMentor", async (req,res)=>{
-    const {email, password, firstname, lastname, active} = req.body; 
+router.post("/creatementor", async (req,res)=>{
+    const {email, password, firstname, lastname, active} = req.body;
+    if (req.accessLevel != 1) {
+        res.status(401).json({message: "You are not authorized for this action.", result: "Failure"});
+        return;
+    }
     bcrypt.hash(password, 10).then((hash) => {
         mentor.create({
             email: email,
@@ -30,17 +38,28 @@ router.post("/AddMentor", async (req,res)=>{
             active:active
         });
     });
-    res.json({result: "Success"});
+    res.status(200).json({result: "Success"});
 });
 
-router.post("/M;All", async(req,res)=>{
+router.post("/editmentor", async (req, res) => {
+    const {changes} = req.body;
+    if (req.accessLevel != 1) {
+        res.status(401).json({message: "You are not authorized for this action.", result: "Failure"});
+        return;
+    }
+    
+})
+
+router.post("/mentorlist", async(req,res)=>{
+    if (req.accessLevel != 1) {
+        res.status(401).json({message: "You are not authorized for this action.", result: "Failure"});
+        return;
+    }
     await mentor.findAll().then(data =>{
-        res.json(data)
+        data.result = "Success";
+        res.status(200).json(data);
     }).catch(err =>{
-        res.status(500).send({
-            message:
-            err.message || "Error Occurred When Retrieving Mentors"
-        });
+        res.status(500).json({message: "An error occurred while retrieving mentors.", result: "Failure"});
     });
 });
 

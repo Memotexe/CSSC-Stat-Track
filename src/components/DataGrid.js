@@ -4,8 +4,8 @@ import "../styles/datagrid.scss"
 const DataGrid = (props) => {
 
     return (
-        <div className={"container is-fluid is-justify-content-center column is-three-quarters "} id="table">
-            <table className="table m-auto">
+        <div className={"container is-fluid is-justify-content-center column is-three-quarters"} id="table">
+            <table className="table m-auto animate">
                 <thead>
                     <tr>
                     {props.columns.map((colName, index) => {
@@ -21,7 +21,6 @@ const DataGrid = (props) => {
                                 else if (props.data[columnIndex][index] === undefined) return <td></td>;
                                 return <td>{props.data[columnIndex][index]}</td>
                             })}
-                            {/* <td><button name="D"/><button name="E"/><button name="A"/></td> */}
                         </tr>
                     })}
                 </tbody>

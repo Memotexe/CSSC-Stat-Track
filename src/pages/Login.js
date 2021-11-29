@@ -3,9 +3,10 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 const Login = () => {
+    document.title="Login Page";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
+    
     let history = useHistory();
 
     const login = () => {
@@ -17,8 +18,8 @@ const Login = () => {
             } else {
                 console.log("TEST");
                 sessionStorage.setItem("accessToken", response.data.data);
-                
-                history.push("/adminPanel");
+                window.location.href = response.data.redirect_url;
+                // history.push("/adminPanel");
             }
         });
     };

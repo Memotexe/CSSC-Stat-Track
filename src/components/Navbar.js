@@ -1,22 +1,12 @@
 import React from "react"
-
-const props = {
-  buttons : <></>,
-  dropdownButtons : <></>
-}
+import '../styles/navbar.scss';
 
 const Navbar = (props) => {
     return(
-      <nav className="navbar" role="navigation" aria-label="main navigation" style={{zIndex: 1000}}>
-        <div className="navbar-brand">
-          <a className="navbar-item" href="https://bulma.io">
-            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"/>
-          </a>
-        </div>
+      <nav className="navbar" role="navigation" aria-label="main navigation">
         <div id="navbarMain" className="navbar-menu">
           <div className="navbar-start">
             {props.buttons.map((component, index) => {
-              
                 return <>{component}</>
             })}
           </div>
@@ -43,5 +33,10 @@ const Navbar = (props) => {
 
 );
 }
+
+Navbar.defaultProps = {
+  buttons : <></>,
+  dropdownButtons : <></>
+};
     
 export default Navbar

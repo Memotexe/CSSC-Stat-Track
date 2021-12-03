@@ -13,7 +13,7 @@ class PrivateRoute extends React.Component {
 
     componentDidMount() {
 
-        axios.post("http://localhost:4002/auth/validate", ({token: sessionStorage.getItem("accessToken"), authLevel: this.props.authLevel})).then((res) => {
+        axios.post("http://localhost:4002/auth/validate", {accessKey: sessionStorage.getItem("accessKey"), authLevel: this.props.authLevel}).then((res) => {
 
             console.log(res.status);
             if (res.status === 200) {
@@ -36,7 +36,7 @@ class PrivateRoute extends React.Component {
     render() {
         if (this.state.authenticated === undefined) {
             console.log("UNDEFINED");
-            return <p>Loading</p>;
+            return <progress className="progress is-small is-primary" max="100">15%</progress>;
         } else if (this.state.authenticated) {
             console.log("TRUE");
             const Passed = this.props.component;

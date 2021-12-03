@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
         email:{
             type: Sequelize.STRING,
             allowNull: false,
+            unique: true,
         },
         mentee_id:{
             type: Sequelize.INTEGER,

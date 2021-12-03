@@ -12,12 +12,10 @@ const Login = () => {
     const login = () => {
         const data = {email:email, password:password};
         axios.post("http://localhost:4002/auth/login", data).then((response)=>{
-            console.log("TEST2");
             if(response.data.error) {
                 alert(response.data.error);
             } else {
-                console.log("TEST");
-                sessionStorage.setItem("accessToken", response.data.data);
+                sessionStorage.setItem("accessKey", response.data.data);
                 window.location.href = response.data.redirect_url;
                 // history.push("/adminPanel");
             }

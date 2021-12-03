@@ -3,18 +3,20 @@ const {tokens} = require("../routes/auth");
 
 const validateToken = (req, res, next) =>{
     if ( req.path == '/auth/login' || req.path == '/auth/logout') return next();
-    const {token} = req.body;
-    if(!token || tokens[token] === undefined) return res.status(203).json({error: "Users not logged in!"});
+    const { accessKey } = req.body;
+    console.log("authmiddleware.js " + accessKey);
+    if(!accessKey || !tokens[accessKey]) return res.status(203).json({error: "User is not logged in!"});
     try{
-        const validToken = verify(token, tokens[token]);
+        const validToken = tokens[accessKey];
         if(validToken.accessLevel != null){
+            req.email = validToken.email;
             req.accessLevel = validToken.accessLevel;
             return next();
         }
     }catch(err){
         return res.json({error: "Server error."});
     }
-    return res.status(203).json({error: "Users not logged in!"});
+    return res.status(203).json({error: "User is not logged in!"});
 };
 
 module.exports = {validateToken};

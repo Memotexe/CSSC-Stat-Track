@@ -10,20 +10,20 @@ app.use(validateToken);
 
 const db = require('./models');
 
-const mentorsRouter = require('./routes/mentors');
-app.use("/mentors", mentorsRouter);
+// const mentorsRouter = require('./routes/mentors');
+// app.use("/mentors", mentorsRouter);
 
-const menteesRouter = require('./routes/mentees');
-app.use("/mentees", menteesRouter);
+// const menteesRouter = require('./routes/mentees');
+// app.use("/mentees", menteesRouter);
 
-const menteeSessionsRouter = require('./routes/mentee_sessions');
-app.use("/mentee_sessions", menteeSessionsRouter);
+// const menteeSessionsRouter = require('./routes/mentee_sessions');
+// app.use("/mentee_sessions", menteeSessionsRouter);
 
-const mentorSessionsRouter = require('./routes/mentor_sessions');
-app.use("/mentor_sessions", mentorSessionsRouter);
+// const mentorSessionsRouter = require('./routes/mentor_sessions');
+// app.use("/mentor_sessions", mentorSessionsRouter);
 
-const adminRouter = require('./routes/admin');
-app.use("/admin", adminRouter);
+const api = require('./routes/api');
+app.use("/api", api);
 
 const authRouter = require('./routes/auth');
 app.use("/auth", authRouter.router);

@@ -1,12 +1,34 @@
-import React, { useState, setState, Component } from "react";
-import "../styles/modals.scss";
+import React, { useState, useEffect, setState, Component } from "react";
+import "../styles/modal.scss";
 import axios from "axios";
 
 
 const EditModal = (props) => {
+    let nameHolder = props.singleName;
+    let emailHolder = props.singleEmail;
+    let activeHolder = props.singleActive;
     if (!props.show) {
         return <></>
     }
+
+
+
+    const onSubmission = (updatedName, updatedEmail, updatedActive) => {
+        if(updatedActive){
+            updatedActive = 1;
+        }else{
+            updatedActive = 0;
+        }
+        axios.post("http://localhost:4002/api/editmentor", {accessKey: sessionStorage.getItem("accessKey"), updatedName:updatedName, updatedEmail:updatedEmail, updatedActive:updatedActive, oldName: props.singleName, oldEmail:props.singleEmail, oldActive: props.singleActive}).then((response)=>{
+            if(response.status != 200) {
+                console.log(response.body.error);
+            } else {
+                props.toggle();
+                window.location.reload();
+            }
+        });
+    }
+
     return (
         <div className="modal is-active" >
             <div className="modal-background"></div>
@@ -18,26 +40,31 @@ const EditModal = (props) => {
                 <section className="modal-card-body">
                     <form>
                         <label>Name:</label>
-                        <input id="name" type="text" value={props.singleName}  />
+                        <input id="name" name="name" type="text" defaultValue={nameHolder} onChange={() => nameHolder=document.getElementById('name').value} />
                         <br />
                         <label>Email:</label>
-                        <input id="email" type="text" value={props.singleEmail}  />
+                        <input id="email" name="email" type="text" defaultValue={emailHolder} onChange={() => emailHolder=document.getElementById('email').value} />
                         <br />
-                        <label>is Active?:</label>
-                        <label className="switch">
-                            <input onLoad={props.singleActive == 1 ? console.log(true)  : console.log(false)} type="checkbox"/>
-                        <span className ="slider round"></span>
+                        <label className="checkbox">
+                            <input id="active" name="active" type="checkbox" defaultChecked={activeHolder} onChange={() => activeHolder=document.getElementById("active").checked}/>
+                            Active
                         </label>
+                        {/* <label>is Active?:</label>
+                        <label>
+                            <input id="active" name="active" defaultChecked={activeHolder} onChange={() => activeHolder=document.getElementById("active").checked} type="checkbox" />
+                        </label> */}
                     </form>
                 </section>
                 <footer className="modal-card-foot">
-                    <button className="button is-success" onClick={() => props.toggle()}>Save changes</button>
+                    <button id="submitBtn" onClick={() => onSubmission(nameHolder, emailHolder, activeHolder)} type="submit" className="button is-success" >Save changes</button>
                     <button className="button" onClick={() => props.toggle()}>Cancel</button>
                 </footer>
             </div>
         </div>
     )
 }
+
+
 
 
 EditModal.defaultProps = {

@@ -1,39 +1,43 @@
 const Sequelize = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    const Mentor = sequelize.define("mentor", {
-        mentor_id:{
+    const User = sequelize.define("user", {
+        user_id: {
             type: Sequelize.INTEGER,
-            allowNull:false,
-            primaryKey:true,
-            autoIncrement: true
+            allowNull: false,
+            primaryKey: true,
+            autoIncrement: true,
         },
-        email:{
+        email: {
             type: Sequelize.STRING,
-            allowNull:false,
+            allowNull: false,
+            unique: true,
         },
         password: {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        firstname:{
-            type: Sequelize.STRING,
-            allowNull:false,
-        },
-        lastname:{
-            type: Sequelize.STRING,
-            allowNull:false,
-        },
-        active:{
+        access_level: {
             type: Sequelize.INTEGER,
-            allowNull:false,
+            allowNull: false,
+        },
+        firstname: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        lastname: {
+            type: Sequelize.STRING,
+            allowNull: false,
+        },
+        active: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
         }
-
     },
     {
         underscored: true,
         freezeTableName: true
     });
 
-    return Mentor;
+    return User;
 }

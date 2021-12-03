@@ -1,18 +1,18 @@
 const Sequelize = require('sequelize');
 
 module.exports =  (sequelize, DataTypes) => {
-    const Mentor_Session = sequelize.define("mentor_session", {
-        mentor_session_id:{
+    const User_Session = sequelize.define("user_session", {
+        user_session_id:{
             type: Sequelize.INTEGER,
             allowNull:false,
             primaryKey:true,
             autoIncrement: true
         },
-        mentor_login:{
+        user_login:{
             type: Sequelize.DATE,
             allowNull:false,
         },
-        mentor_logout:{
+        user_logout:{
             type: Sequelize.DATE,
             allowNull:false,
         }
@@ -22,5 +22,5 @@ module.exports =  (sequelize, DataTypes) => {
         freezeTableName: true
     });
 
-    return Mentor_Session;
+    return User_Session;
 }

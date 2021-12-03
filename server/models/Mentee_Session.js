@@ -14,9 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         logout:{
             type: Sequelize.DATE,
-            allowNull: false,
+            allowNull: true,
         },
-        class:{
+        course:{
             type: Sequelize.STRING,
             allowNull: false,
         },
@@ -26,8 +26,24 @@ module.exports = (sequelize, DataTypes) => {
         },
         comment:{
             type: Sequelize.STRING,
-            allowNull: false,
+            allowNull: true,
         }
+        /*
+        .########....###....########..##.......########....####.##....##.########..#######.
+        ....##......##.##...##.....##.##.......##...........##..###...##.##.......##.....##
+        ....##.....##...##..##.....##.##.......##...........##..####..##.##.......##.....##
+        ....##....##.....##.########..##.......######.......##..##.##.##.######...##.....##
+        ....##....#########.##.....##.##.......##...........##..##..####.##.......##.....##
+        ....##....##.....##.##.....##.##.......##...........##..##...###.##.......##.....##
+        ....##....##.....##.########..########.########....####.##....##.##........#######.
+        
+        This table has a few associations that go along with it:
+
+        user_session_user_session_id - the ID to the associated user session who hosted this mentee session.
+
+        mentee_mentee_id - the ID to the associated mentee who had this session.
+
+        */
     },
     {
         underscored: true,

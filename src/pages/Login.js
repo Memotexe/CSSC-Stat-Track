@@ -12,11 +12,18 @@ const Login = () => {
     const login = () => {
         const data = {email:email, password:password};
         axios.post("http://localhost:4002/auth/login", data).then((response)=>{
-            if(response.data.error) {
-                alert(response.data.error);
+            if(response.data.message) {
+                alert(response.data.message);
             } else {
                 sessionStorage.setItem("accessKey", response.data.data);
-                window.location.href = response.data.redirect_url;
+                axios.post("http://localhost:4002/api/session/start/user", {accessKey: sessionStorage.getItem("accessKey")}).then(res => {
+                    if (response.data.message) {
+                        alert(response.data.message);
+                        sessionStorage.removeItem("accessKey");
+                    } else {
+                        window.location.href = response.data.redirect_url;
+                    }
+                });
                 // history.push("/adminPanel");
             }
         });

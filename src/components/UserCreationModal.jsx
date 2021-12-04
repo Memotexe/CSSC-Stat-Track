@@ -21,9 +21,9 @@ const UserCreationModal = (props) => {
         // setActive(active === 'on' ? 1 : 0);
         // setAdmin(adminUser === 'on' ? 1 : 0);
         console.log(first + " " + last + " " + email + " " + password + " " + active + " " + adminUser);
-        const name = first + last;
-        const data = {name:name, email:email, password: password, active:active, adminUser: adminUser, accessKey: sessionStorage.getItem("accessKey")};
-        axios.post("http://localhost:4002/api/createuser", data).then((response)=>{
+        // const name = first + last;
+        const data = {first:first, last:last, email:email, password: password, active:active, adminUser: adminUser, accessKey: sessionStorage.getItem("accessKey")};
+        axios.post("http://localhost:4002/api/create/user", data).then((response)=>{
             if(response.data.error) {
                 alert(response.data.error);
             } else {

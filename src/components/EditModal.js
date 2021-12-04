@@ -4,24 +4,21 @@ import axios from "axios";
 
 
 const EditModal = (props) => {
-    let nameHolder = props.singleName;
-    let emailHolder = props.singleEmail;
-    let activeHolder = props.singleActive;
+    const [first, setFirst] = useState(props.firstName);
+    const [last, setLast] = useState(props.lastName);
+    const [email, setEmail] = useState(props.email);
+    const [active, setActive] = useState(props.active);
+
     if (!props.show) {
         return <></>
     }
 
 
 
-    const onSubmission = (updatedName, updatedEmail, updatedActive) => {
-        if(updatedActive){
-            updatedActive = 1;
-        }else{
-            updatedActive = 0;
-        }
-        axios.post("http://localhost:4002/api/editmentor", {accessKey: sessionStorage.getItem("accessKey"), updatedName:updatedName, updatedEmail:updatedEmail, updatedActive:updatedActive, oldName: props.singleName, oldEmail:props.singleEmail, oldActive: props.singleActive}).then((response)=>{
+    const onSubmission = () => {
+        axios.post("http://localhost:4002/api/edit/user", {accessKey: sessionStorage.getItem("accessKey"), firstname:first, lastname:last, email:email, active:active, oldemail:props.email}).then((response)=>{
             if(response.status != 200) {
-                console.log(response.body.error);
+                console.log(response);
             } else {
                 props.toggle();
                 window.location.reload();
@@ -30,37 +27,38 @@ const EditModal = (props) => {
     }
 
     return (
-        <div className="modal is-active" >
-            <div className="modal-background"></div>
-            <div className="modal-card">
-                <header className="modal-card-head">
-                    <p className="modal-card-title">Edit Mentor</p>
-                    <button className="delete" aria-label="close" onClick={() => props.toggle()}></button>
-                </header>
-                <section className="modal-card-body">
-                    <form>
-                        <label>Name:</label>
-                        <input id="name" name="name" type="text" defaultValue={nameHolder} onChange={() => nameHolder=document.getElementById('name').value} />
-                        <br />
-                        <label>Email:</label>
-                        <input id="email" name="email" type="text" defaultValue={emailHolder} onChange={() => emailHolder=document.getElementById('email').value} />
-                        <br />
-                        <label className="checkbox">
-                            <input id="active" name="active" type="checkbox" defaultChecked={activeHolder} onChange={() => activeHolder=document.getElementById("active").checked}/>
-                            Active
+        <div className={'animate modal columns is-flex-mobile p-5 '  }>
+            <div className="modal-card card">
+                <p className="modal-card-head modal-card-title is-justify-content-center">Edit User</p>
+                <div className="modal-card-body">
+                    <div className="content control level-item">
+                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0" placeholder="First Name" defaultValue={props.firstName} onChange = {(event) => {
+                            setFirst(event.target.value);
+                        }}/>
+                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0" placeholder="Last Name" defaultValue={props.lastName} onChange = {(event) => {
+                            setLast(event.target.value);
+                        }}/>
+                    </div>
+                    <div className="content control level-item">
+                        <input type="email" className="field input is-primary mx-1" placeholder="PFW Email" defaultValue={props.email} onChange = {(event) => {
+                            setEmail(event.target.value);
+                        }}/>
+                    </div>
+                    <div className="content control level-item">
+                        <label className="checkbox level-item">
+                            <div className="is-fullwidth">
+                                <p className="mb-auto px-2">Active</p>
+                                <input id="active" name="active" type="checkbox" defaultChecked={props.active} onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
+                            </div>
                         </label>
-                        {/* <label>is Active?:</label>
-                        <label>
-                            <input id="active" name="active" defaultChecked={activeHolder} onChange={() => activeHolder=document.getElementById("active").checked} type="checkbox" />
-                        </label> */}
-                    </form>
-                </section>
-                <footer className="modal-card-foot">
-                    <button id="submitBtn" onClick={() => onSubmission(nameHolder, emailHolder, activeHolder)} type="submit" className="button is-success" >Save changes</button>
-                    <button className="button" onClick={() => props.toggle()}>Cancel</button>
-                </footer>
+                    </div>
+                    <div className="content control level-item">
+                        <button onClick={() => onSubmission()} className="button is-primary mx-1 is-fullwidth">Save Changes</button>
+                        <button onClick={() => props.toggle()} className="button is-secondary mx-1 is-fullwidth">Cancel</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div> 
     )
 }
 
@@ -69,9 +67,10 @@ const EditModal = (props) => {
 
 EditModal.defaultProps = {
     show: false,
-    singleName: "",
-    singleEmail: "",
-    singleActive: 0,
+    firstName: "",
+    lastName: "",
+    email: "",
+    active: 0,
     toggle: () => { }
 }
 

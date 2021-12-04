@@ -15,16 +15,16 @@ class AdminPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mentors: [],
+            firstNames: [],
+            lastNames: [],
+            combinedNames: [],
             emails: [],
             actives: [],
             edits: [],
             showEditor: false,
             showCreation: false,
             showMenteeCreation: false,
-            singleName: "",
-            singleEmail: "",
-            singleActive: 0
+            selectedIndex: -1
         };
     }
     logout() {
@@ -35,17 +35,9 @@ class AdminPanel extends React.Component {
     }
 
     toggleEditor(index) {
-        let sName=this.state.mentors[index];
-        let sEmail=this.state.emails[index];
-        let sActive=this.state.actives[index];
-
-        this.setState((state, props) => {
-            return {
-                showEditor: !this.state.showEditor,
-                singleName: sName,
-                singleEmail: sEmail,
-                singleActive: sActive,
-            };
+        this.setState({
+            selectedIndex: index,
+            showEditor: !this.state.showEditor
         });
     }
 
@@ -60,37 +52,44 @@ class AdminPanel extends React.Component {
     componentDidMount() {
         document.title="Admin Panel";
         console.log("adminpanel.js: " + "HELLO");
-        axios.post('http://localhost:4002/api/mentorlist', { accessKey: sessionStorage.getItem("accessKey")}).then(response => {
+        axios.post('http://localhost:4002/api/list/users', { accessKey: sessionStorage.getItem("accessKey")}).then(response => {
             return response.data;
         }).then((res) => {
-            let mentors = [];
+            let data = res.data;
+            let firstNames = [];
+            let lastNames = [];
+            let combinedNames = [];
             let emails = [];
             let actives = [];
             let edits = [];
-            for (let i = 0; i < res.length; i++) {
-                mentors.push(res[i].firstname + " " + res[i].lastname);
-                emails.push(res[i].email);
-                actives.push(res[i].active);
+            for (let i = 0; i < data.length; i++) {
+                firstNames.push(data[i].firstname);
+                lastNames.push(data[i].lastname);
+                combinedNames.push(data[i].firstname + " " + data[i].lastname);
+                emails.push(data[i].email);
+                actives.push(data[i].active);
                 edits.push(<button className="datagrid-button" onClick={() => this.toggleEditor(i)}>Edit</button>)
             }
-            this.setState((state, props) => {
-                return {
-                    mentors: mentors,
-                    emails: emails,
-                    actives: actives,
-                    edits: edits
-                };
+            this.setState({
+                firstNames: firstNames,
+                lastNames: lastNames,
+                combinedNames: combinedNames,
+                emails: emails,
+                actives: actives,
+                edits: edits
             });
         });
     }
 
     render() {
+        const index = this.state.selectedIndex;
         return (
             <>
                 <NavBar buttons={[
-                    <Button buttonText="Search Mentees" classes="mr-2" />,
+                    // <Button buttonText="Search Mentees" classes="mr-2" />,
                     <Button buttonText="Mentee test" classes="mr-2" action={() => this.toggleMenteeCreation()} />,
-                    <Button buttonText="Search Mentors" classes="mr-2" action={() => console.log("HAAAA")} />
+                    // <Button buttonText="Search Mentors" classes="mr-2" action={() => console.log("HAAAA")} />
+                    <Button buttonText="Open Signin" classes="mr-2" action={() => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")}/>
                 ]}
                     dropdownButtons={[
                         <DropdownButton optionText="Sign Out" action={() => this.logout()} classes="mr-2  justify-content: center" />,
@@ -105,7 +104,7 @@ class AdminPanel extends React.Component {
                     "Actions"
                 ]}
                     data={[
-                        this.state.mentors,
+                        this.state.combinedNames,
                         this.state.emails,
                         this.state.actives,
                         this.state.edits
@@ -113,7 +112,7 @@ class AdminPanel extends React.Component {
                 />
                 {this.state.showMenteeCreation ? <MenteeCreationModal show={this.state.showMenteeCreation} toggle={() => this.toggleMenteeCreation()}/> : <></>}
                 {this.state.showCreation ? <UserCreationModal show={this.state.showCreation} toggle={() => this.toggleCreation()}/> : <></>}
-                {this.state.showEditor ? <EditModal show={this.state.showEditor} singleName={this.state.singleName} singleEmail={this.state.singleEmail} singleActive={this.state.singleActive} toggle={() => this.toggleEditor()} /> : <></>}
+                {this.state.showEditor ? <EditModal show={this.state.showEditor} firstName={this.state.firstNames[index]} lastName={this.state.lastNames[index]} email={this.state.emails[index]} active={this.state.actives[index]} toggle={() => this.toggleEditor()} /> : <></>}
             </>
         );
     };

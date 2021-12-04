@@ -14,7 +14,7 @@ module.exports =  (sequelize, DataTypes) => {
         },
         user_logout:{
             type: Sequelize.DATE,
-            allowNull:false,
+            allowNull:true,
         }
     },
     {

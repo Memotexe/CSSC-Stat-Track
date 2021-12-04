@@ -1,11 +1,12 @@
 import React, { useState, setState, Component } from "react";
+import {Redirect} from "react-router-dom";
 import axios from "axios";
 import NavBar from "../components/Navbar";
 import DataGrid from "../components/DataGrid";
 import Button from "../components/Button";
 import DropdownButton from "../components/DropdownButton";
 import { render } from "sass";
-import SigninModal from "../components/SigninModal";
+// import SigninModal from "../components/SigninModal";
 
 
 class MentorPanel extends React.Component {
@@ -28,19 +29,15 @@ class MentorPanel extends React.Component {
             window.location.reload();
         });
     }
-    
-    toggleModal() {
-        this.setState({signInModal: !this.state.signInModal});
-    }
 
     componentDidMount() {
         document.title="Mentor Panel";
 
-        axios.post('http://localhost:4002/api/sessionlist', {accessKey: sessionStorage.getItem("accessKey")}).then(response => {
+        axios.post('http://localhost:4002/api/session/list/mentees', {accessKey: sessionStorage.getItem("accessKey")}).then(response => {
             return response.data;
         }).then((res) => {
-            let name=[]
-            let email = []
+            let name=[];
+            let email = [];
             let course = [];
             let assignment = [];
             let comment = [];
@@ -70,12 +67,11 @@ class MentorPanel extends React.Component {
     }
 
     render() {
-        if (this.state.signInModal) return <SigninModal show={this.state.signInModal} toggle={() => this.toggleModal()}/>;
         return (
             <>
                 <NavBar buttons={[
-                        <Button buttonText="Open Signin" classes="mr-2" action={() => this.toggleModal()} />,
-                        <Button buttonText="Search Mentees" classes="mr-2" action={() => console.log("add modal to search mentee table HERE")} />
+                        <Button buttonText="Open Signin" classes="mr-2" action={() => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")} />
+                        // <Button buttonText="Search Mentees" classes="mr-2" action={() => console.log("add modal to search mentee table HERE")} />
                     ]}
                     dropdownButtons={[
                         <DropdownButton optionText="Sign Out" action={() => this.logout()}/>,

@@ -34,15 +34,12 @@ class PrivateRoute extends React.Component {
     }
 
     render() {
-        if (this.state.authenticated === undefined) {
-            console.log("UNDEFINED");
+        if (this.state.authenticated === undefined || this.state.authenticated === null) {
             return <progress className="progress is-small is-primary" max="100">15%</progress>;
         } else if (this.state.authenticated) {
-            console.log("TRUE");
             const Passed = this.props.component;
             return <Passed />
         } else {
-            console.log("false");
             return <Redirect to="/"/>;
         }
     };

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-        assigment:{
+        assignment:{
             type: Sequelize.STRING,
             allowNull: false,
         },

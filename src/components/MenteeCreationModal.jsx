@@ -13,7 +13,7 @@ const MenteeCreationModal = (props) => {
     }
 
     const addUser = () => {
-        axios.post("http://localhost:4002/api/creatementee", {accessKey: sessionStorage.getItem("accessKey"), email:email, firstname:first, lastname:last}).then((response)=>{
+        axios.post("http://localhost:4002/api/create/mentee", {accessKey: sessionStorage.getItem("accessKey"), email:email, firstname:first, lastname:last}).then((response)=>{
             if(response.status != 200) {
                 console.log(response.body.error);
             } else {

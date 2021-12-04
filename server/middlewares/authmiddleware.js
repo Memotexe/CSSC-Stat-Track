@@ -9,8 +9,11 @@ const validateToken = (req, res, next) =>{
     try{
         const validToken = tokens[accessKey];
         if(validToken.accessLevel != null){
-            req.email = validToken.email;
-            req.accessLevel = validToken.accessLevel;
+            req.email = validToken.email
+            req.accessLevel = validToken.accessLevel
+            req.firstName = validToken.firstName
+            req.lastName = validToken.lastName
+            req.userId = validToken.userId
             return next();
         }
     }catch(err){

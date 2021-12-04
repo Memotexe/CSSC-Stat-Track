@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import PrivateRoute from './components/PrivateRoute';
 import AdminPanel from './pages/AdminPanel';
 import MentorPanel from './pages/MentorPanel';
+import MenteeSignIn from './pages/MenteeSignIn'
 
 function App() {
   
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" exact component={Login}></Route>
         <PrivateRoute path="/mentorPanel" exact component={MentorPanel} authLevel={0}></PrivateRoute>
         <PrivateRoute path="/adminPanel" exact component={AdminPanel} authLevel={1}></PrivateRoute>
+        <PrivateRoute path="/menteeSignIn" exact component={MenteeSignIn} authLevel={0}></PrivateRoute>
       </Switch>
     </Router>
   );

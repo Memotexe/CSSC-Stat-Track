@@ -1,15 +1,15 @@
 import React, { useState, setState, Component } from "react";
 import axios from "axios";
-import NavBar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 import DataGrid from "../components/DataGrid";
-import Button from "../components/Button";
-import DropdownButton from "../components/DropdownButton";
 import { render } from "sass";
 import Login from "./Login";
 import { useHistory } from "react-router";
-import EditModal from "../components/EditModal";
+import UserEditModal from "../components/UserEditModal";
 import UserCreationModal from "../components/UserCreationModal";
 import MenteeCreationModal from "../components/MenteeCreationModal";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class AdminPanel extends React.Component {
     constructor(props) {
@@ -26,12 +26,6 @@ class AdminPanel extends React.Component {
             showMenteeCreation: false,
             selectedIndex: -1
         };
-    }
-    logout() {
-        axios.post('http://localhost:4002/auth/logout', { accessKey: sessionStorage.getItem("accessKey") }).then((resp) => {
-            sessionStorage.removeItem("accessKey");
-            window.location.reload();
-        });
     }
 
     toggleEditor(index) {
@@ -78,24 +72,45 @@ class AdminPanel extends React.Component {
                 actives: actives,
                 edits: edits
             });
+        }).catch(err => {
+            alert(err.response.data.message);
         });
+    }
+
+    testShit() {
+        toast.success("Hello", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+        });
+        return <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
     }
 
     render() {
         const index = this.state.selectedIndex;
         return (
             <>
-                <NavBar buttons={[
-                    // <Button buttonText="Search Mentees" classes="mr-2" />,
-                    <Button buttonText="Mentee test" classes="mr-2" action={() => this.toggleMenteeCreation()} />,
-                    // <Button buttonText="Search Mentors" classes="mr-2" action={() => console.log("HAAAA")} />
-                    <Button buttonText="Open Signin" classes="mr-2" action={() => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")}/>
-                ]}
-                    dropdownButtons={[
-                        <DropdownButton optionText="Sign Out" action={() => this.logout()} classes="mr-2  justify-content: center" />,
-                        // <DropdownButton optionText="Change Password" classes="mr-2" style="width: 100%" />,
-                        <DropdownButton optionText="Add User" classes="mr-2" style="width: 100%" action={() => this.setState({showCreation: true})}/>
-                    ]} />
+                <Navbar
+                    buttons={[
+                        {text: "Add User", action: () => this.setState({showCreation: true})},
+                        {text: "Test toast", action: () => this.testShit()},
+                        {text: "Mentor Panel", action: () => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/mentorPanel")}
+                    ]} 
+                />
 
                 <DataGrid columns={[
                     "Name",
@@ -110,9 +125,8 @@ class AdminPanel extends React.Component {
                         this.state.edits
                     ]}
                 />
-                {this.state.showMenteeCreation ? <MenteeCreationModal show={this.state.showMenteeCreation} toggle={() => this.toggleMenteeCreation()}/> : <></>}
                 {this.state.showCreation ? <UserCreationModal show={this.state.showCreation} toggle={() => this.toggleCreation()}/> : <></>}
-                {this.state.showEditor ? <EditModal show={this.state.showEditor} firstName={this.state.firstNames[index]} lastName={this.state.lastNames[index]} email={this.state.emails[index]} active={this.state.actives[index]} toggle={() => this.toggleEditor()} /> : <></>}
+                {this.state.showEditor ? <UserEditModal show={this.state.showEditor} firstName={this.state.firstNames[index]} lastName={this.state.lastNames[index]} email={this.state.emails[index]} active={this.state.actives[index]} toggle={() => this.toggleEditor()} /> : <></>}
             </>
         );
     };

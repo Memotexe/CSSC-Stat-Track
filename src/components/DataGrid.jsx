@@ -34,4 +34,4 @@ DataGrid.defaultProps = {
     data: [[]]
 }
 
-export default DataGrid
+export default DataGrid;

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
-import "../styles/modal.scss";
 
 const MenteeCreationModal = (props) => {
     const [first, setFirst] = useState("");
@@ -13,18 +11,20 @@ const MenteeCreationModal = (props) => {
     }
 
     const addUser = () => {
-        axios.post("http://localhost:4002/api/create/mentee", {accessKey: sessionStorage.getItem("accessKey"), email:email, firstname:first, lastname:last}).then((response)=>{
-            if(response.status != 200) {
-                console.log(response.body.error);
+        axios.post("http://localhost:4002/api/create/mentee", {accessKey: sessionStorage.getItem("accessKey"), email:email, firstName:first, lastName:last}).then((response)=>{
+            if(response.status !== 200) {
+                alert(response.data.message);
             } else {
                 props.toggle();
                 window.location.reload();
             }
+        }).catch(err => {
+            alert(err.response.data.message);
         });
     }
 
     return (
-        <div className={'animate modal columns is-flex-mobile p-5 '  }>
+        <div className={'animate modal columns is-flex-mobile p-5 '}>
             <div className="modal-card card">
                 <p className="modal-card-head modal-card-title is-justify-content-center">Mentee Creation</p>
                 <div className="modal-card-body">

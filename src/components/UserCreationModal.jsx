@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
-import "../styles/modal.scss";
 
 const UserCreationModal = (props) => {
     const [first, setFirst] = useState("");
@@ -16,22 +14,17 @@ const UserCreationModal = (props) => {
     }
 
     const addUser = () => {
-        console.log(active);
-        console.log(adminUser);
-        // setActive(active === 'on' ? 1 : 0);
-        // setAdmin(adminUser === 'on' ? 1 : 0);
         console.log(first + " " + last + " " + email + " " + password + " " + active + " " + adminUser);
-        // const name = first + last;
-        const data = {first:first, last:last, email:email, password: password, active:active, adminUser: adminUser, accessKey: sessionStorage.getItem("accessKey")};
+        const data = { email:email, password: password, firstName:first, lastName:last, active:active, accessLevel: adminUser, accessKey: sessionStorage.getItem("accessKey")};
         axios.post("http://localhost:4002/api/create/user", data).then((response)=>{
-            if(response.data.error) {
+            if(response.status !== 200) {
                 alert(response.data.error);
             } else {
-                sessionStorage.setItem("accessKey", response.data.data);
-                console.log("Shit Sent To Back End..... OF UR MOM!");
                 props.toggle();
-
+                window.location.reload();
             }
+        }).catch(err => {
+            alert(err.response.data.message);
         });
 
     }
@@ -59,7 +52,7 @@ const UserCreationModal = (props) => {
                         <label className="checkbox level-item">
                             <div className="is-fullwidth">
                                 <p className="mb-auto px-2">Active</p>
-                                <input id="active" name="active" type="checkbox"  onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
+                                <input id="active" name="active" type="checkbox" onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
                             </div>
                         </label>
                         <label className="checkbox level-item">

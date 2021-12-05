@@ -23,7 +23,7 @@ const db = require('./models');
 // app.use("/mentor_sessions", mentorSessionsRouter);
 
 const api = require('./routes/api');
-app.use("/api", api);
+app.use("/api", api.router);
 
 const authRouter = require('./routes/auth');
 app.use("/auth", authRouter.router);

@@ -1,5 +1,4 @@
-import React, { useState, useEffect, setState, Component } from "react";
-import "../styles/modal.scss";
+import React, { useState } from "react";
 import axios from "axios";
 
 
@@ -13,11 +12,9 @@ const EditModal = (props) => {
         return <></>
     }
 
-
-
     const onSubmission = () => {
-        axios.post("http://localhost:4002/api/edit/user", {accessKey: sessionStorage.getItem("accessKey"), firstname:first, lastname:last, email:email, active:active, oldemail:props.email}).then((response)=>{
-            if(response.status != 200) {
+        axios.post("http://localhost:4002/api/edit/user", {accessKey: sessionStorage.getItem("accessKey"), firstName:first, lastName:last, email:email, active:active, oldEmail:props.email}).then((response)=>{
+            if(response.status !== 200) {
                 console.log(response);
             } else {
                 props.toggle();
@@ -32,10 +29,10 @@ const EditModal = (props) => {
                 <p className="modal-card-head modal-card-title is-justify-content-center">Edit User</p>
                 <div className="modal-card-body">
                     <div className="content control level-item">
-                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0" placeholder="First Name" defaultValue={props.firstName} onChange = {(event) => {
+                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0 has-text-left" placeholder="First Name" defaultValue={props.firstName} onChange = {(event) => {
                             setFirst(event.target.value);
                         }}/>
-                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0" placeholder="Last Name" defaultValue={props.lastName} onChange = {(event) => {
+                        <input type="text" className="field input is-primary is-fullwidth mx-1 mb-0 has-text-left" placeholder="Last Name" defaultValue={props.lastName} onChange = {(event) => {
                             setLast(event.target.value);
                         }}/>
                     </div>

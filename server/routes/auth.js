@@ -4,6 +4,7 @@ const db = require("../models");
 const user = db.user;
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const {resp} = require("./api");
 
 const tokenTable = {};
 
@@ -29,7 +30,7 @@ router.post("/login", async (req, res) => {
     if (loggingInUser) {
         bcrypt.compare(password, loggingInUser.password).then((match) =>{
             if(!match) {
-                res.status(403).json({error: "Wrong Username or Password Combination", result: "Failure"});
+                res.status(403).json(resp("Wrong username or password combination.", "Failure"));
                 return;
             }
 
@@ -47,12 +48,12 @@ router.post("/login", async (req, res) => {
 
             //if for some reason, the data is malformed (maybe tampering from an external program) we just disallow the login.
             if ((accessToken.accessLevel != 0 && accessToken.accessLevel != 1) || !accessToken.firstName || !accessToken.lastName || !accessToken.email) {
-                res.status(500).json({error: "An error occurred while creating your access token.", result: "Failure"});
+                res.status(500).json(resp("An error occurred creating your access token.", "Failure"));
                 return;
             }
 
             if (loggingInUser.active != 1) {
-                res.status(400).json({error: "This is an inactive account.", result: "Failure"});
+                res.status(400).json(resp("This is an inactive account.", "Failure"));
                 return;
             }
 
@@ -60,11 +61,12 @@ router.post("/login", async (req, res) => {
             tokenTable[accessKey] = accessToken;
 
             //We send the access key to the client for accessing the API
-            if (loggingInUser.access_level == 1) res.status(200).json({data: accessKey, result: "Success", redirect_url: "/adminPanel"});
-            else res.status(200).json({data: accessKey, result: "Success", redirect_url: "/mentorPanel"});
+            if (loggingInUser.access_level == 1) res.status(200).json(resp("Login successful.", "Success", {redirect_url:"/adminPanel", accessKey:accessKey}));
+            else res.status(200).json(resp("Login successful.", "Success", {redirect_url:"/mentorPanel", accessKey:accessKey}));
         });
     } else {
-        res.status(400).json({error: "User Doesn't Exist", result: "Failure"});
+        console.log("User does not exist.");
+        res.status(400).json(resp("User does not exist.", "Failure"));
     }
     
 });
@@ -81,11 +83,11 @@ router.post("/login", async (req, res) => {
 router.post("/logout", async (req, res) => {
     const { accessKey } = req.body;
 
-    if (accessKey == undefined || !tokenTable[accessKey]) {
-        res.status(400).json({error: "User not logged in", result: "Failure"});
+    if (!accessKey || !tokenTable[accessKey]) {
+        res.status(400).json(resp("User not logged in.", "Failure"));
     } else {
         tokenTable[accessKey] = null;
-        res.status(200).json({error: "User logged out", result: "Success"});
+        res.status(200).json(resp("Logout successful.", "Success"));
     }
 });
 
@@ -101,10 +103,10 @@ router.post("/logout", async (req, res) => {
 router.post("/validate", (req, res) => {
     const { accessKey } = req.body;
 
-    if (accessKey == undefined || !tokenTable[accessKey]) {
-        res.status(400).json({error: "User not logged in", result: "Failure"});
+    if (!accessKey || !tokenTable[accessKey]) {
+        res.status(400).json(resp("Invalid access key.", "Failure"));
     } else {
-        res.status(200).json({result: "Success"});
+        res.status(200).json(resp("Valid access key.", "Success", { accessLevel: req.accessLevel}));
     }
 });
 

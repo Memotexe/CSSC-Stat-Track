@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const Button = (props) => {
     let button = <a className="button" href={props.href}>{props.buttonText}</a>

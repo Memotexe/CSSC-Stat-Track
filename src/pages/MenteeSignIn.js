@@ -5,7 +5,7 @@ import { render } from "sass";
 import MenteeCreationModal from "../components/MenteeCreationModal";
 
 
-class menteeSignIn extends React.Component{
+class MenteeSignIn extends React.Component{
     
     constructor(props) {
         super(props);
@@ -16,9 +16,6 @@ class menteeSignIn extends React.Component{
             showMenteeCreation: false,
         };
     }
-    // const [email, setEmail] = useState("");
-    // const [course, setCourse]= useState("");
-    // const [assignment, setAssigment]= useState("");
 
     toggleMenteeCreation() {
         console.log("this ran");
@@ -32,14 +29,13 @@ class menteeSignIn extends React.Component{
         console.log(this.state.assignment);
         const data = {email: this.state.email, course: this.state.course, assignment: this.state.assignment, accessKey: sessionStorage.getItem("accessKey")};
         axios.post("http://localhost:4002/api/session/start/mentee", data).then((response)=>{
-            if(response.data.error) {
-                alert(response.data.error);
+            if(response.status !== 200) {
+                alert(response.data.message);
             } else {
                 alert("Mentee added to list.");
-                // sessionStorage.setItem("accessToken", response.data.data);
-                // window.location.href = response.data.redirect_url;
-                // history.push("/adminPanel");
             }
+        }).catch(err => {
+            alert(err.response.data.message);
         });
     }
 
@@ -71,10 +67,9 @@ class menteeSignIn extends React.Component{
                                 this.setState({assignment: event.target.value})
                             }}/>
                         </div>
-                        <div className="content control">
-                            <button className="button is-primary is-fullwidth" onClick={()=> this.menteeSignIn()}>Sign In</button>
-                            <br/>
-                            <button className="button is-primary is-fullwidth" onClick={() => this.toggleMenteeCreation()}>Create a New Mentee Account</button>
+                        <div className="content control level-item">
+                            <button className="button is-primary is-fullwidth mx-1" onClick={()=> this.menteeSignIn()}>Sign In</button>
+                            <button className="button is-secondary is-fullwidth mx-1" onClick={() => this.toggleMenteeCreation()}>Create Account</button>
                         </div>
                     </div>
                 </div>
@@ -86,4 +81,4 @@ class menteeSignIn extends React.Component{
     };
 }
 
-export default menteeSignIn;
+export default MenteeSignIn;

@@ -1,103 +1,144 @@
 import React, { useState, setState, Component } from "react";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import axios from "axios";
-import NavBar from "../components/Navbar";
+import Navbar from "../components/Navbar";
 import DataGrid from "../components/DataGrid";
-import Button from "../components/Button";
-import DropdownButton from "../components/DropdownButton";
 import { render } from "sass";
-// import SigninModal from "../components/SigninModal";
+import MenteeEditModal from "../components/MenteeEditModal";
 
 
 class MentorPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name:[],
+            name: [],
             email: [],
             course: [],
             assignment: [],
             comment: [],
-            signInModal: false
+            login: [],
+            logout: [],
+            mentor: [],
+            action: [],
+            sessionId: [],
+            signInModal: false,
+            showEditor: false,
+            selectedIndex: -1,
+            selectedSession: -1
         };
     }
-        
 
-    logout() {
-        axios.post('http://localhost:4002/auth/logout', { accessKey: sessionStorage.getItem("accessKey") }).then((resp) => {
-            sessionStorage.removeItem("accessKey");
-            window.location.reload();
+    toggleEditor(index, sessionId) {
+        this.setState({
+            selectedSession: sessionId,
+            selectedIndex: index,
+            showEditor: !this.state.showEditor
         });
     }
 
-    componentDidMount() {
-        document.title="Mentor Panel";
+    signOutMentee(sessionId){
+        const data = {sessionId: sessionId, accessKey: sessionStorage.getItem("accessKey")}
+        axios.post('http://localhost:4002/api/session/stop/mentee', data).then(res =>{
+            alert("Mentee was Signed Out");
+            window.location.reload();
+        }).catch(err => {
+            alert(err.response.data.message);
+        });
+    }
 
-        axios.post('http://localhost:4002/api/session/list/mentees', {accessKey: sessionStorage.getItem("accessKey")}).then(response => {
-            return response.data;
-        }).then((res) => {
-            let name=[];
+    
+
+    componentDidMount() {
+        document.title = "Mentor Panel";
+
+        axios.post('http://localhost:4002/api/session/list/mentees', { accessKey: sessionStorage.getItem("accessKey") }).then(res => {
+            var mentee_sessions = res.data.data;
+            console.log(mentee_sessions)
+            let name = [];
             let email = [];
             let course = [];
             let assignment = [];
             let comment = [];
-            for (let i = 0; i < res.length; i++) {
-                name.push(res[i].firstname + " " + res[i].lastname);
-                email.push(res[i].email);
-                course.push(res[i].course);
-                assignment.push(res[i].assignment);
-                comment.push(res[i].comment);
+            let login = [];
+            let logout =[];
+            let mentor = [];
+            let action = [];
+            let sessionId = [];
+            for (let i = 0; i < mentee_sessions.length; i++) {
+                name.push(mentee_sessions[i].mentee.firstname + " " + mentee_sessions[i].mentee.lastname);
+                email.push(mentee_sessions[i].mentee.email);
+                course.push(mentee_sessions[i].course);
+                assignment.push(mentee_sessions[i].assignment);
+                comment.push(mentee_sessions[i].comment);
+                login.push(mentee_sessions[i].login);
+                logout.push(mentee_sessions[i].logout);
+                sessionId.push(mentee_sessions[i].mentee_session_id);
+                mentor.push(mentee_sessions[i].user_session.user.firstname + " " + mentee_sessions[i].user_session.user.lastname);
+                action.push(<>
+                                <button className="datagrid-button" onClick={() => this.toggleEditor(i, sessionId[i])}>Edit</button>
+                                {console.log(this.state.logout[i] )}
+                                {logout[i] == undefined ? <button className="datagrid-button" onClick={()=>this.signOutMentee(sessionId[i])}>Signout</button> : <></>}
+                            </>
+                    );
             }
             this.setState((state, props) => {
-                return{
-                    name :name,
-                    email : email,
+                return {
+                    name: name,
+                    email: email,
                     course: course,
                     assignment: assignment,
                     comment: comment,
+                    login: login,
+                    logout: logout,
+                    mentor: mentor,
+                    action: action
                 };
             });
-            console.log(name)
-            console.log(email)
-            console.log(course)
-            console.log(assignment)
-            console.log(comment)
-
         });
+
     }
 
     render() {
+        const index = this.state.selectedIndex;
         return (
             <>
-                <NavBar buttons={[
-                        <Button buttonText="Open Signin" classes="mr-2" action={() => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")} />
-                        // <Button buttonText="Search Mentees" classes="mr-2" action={() => console.log("add modal to search mentee table HERE")} />
-                    ]}
-                    dropdownButtons={[
-                        <DropdownButton optionText="Sign Out" action={() => this.logout()}/>,
-                        // <DropdownButton optionText="Change Password" />
-                    ]} /> 
-                
-                
-                
-                {/* Mentee_Session DB Data */}
-                {/* Past Session Data (Editable) */}
+                <Navbar
+                    buttons={[
+                        {text: "Mentee SignIn", action: () => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")}
+                    ]} 
+                />
                 <DataGrid columns={[
-                    "Name",
-                    "Email",
-                    "Course",
-                    "Assignment",
-                    "Comment"
-                ]}
+                        "Name",
+                        "Email",
+                        "Course",
+                        "Assignment",
+                        "Comment",
+                        "Login",
+                        "Logout",
+                        "Mentor",
+                        "Actions"
+                    ]}
                     data={[
                         this.state.name,
                         this.state.email,
                         this.state.course,
                         this.state.assignment,
-                        this.state.comment
+                        this.state.comment,
+                        this.state.login,
+                        this.state.logout,
+                        this.state.mentor,
+                        this.state.action
                     ]}
                 />
+                {this.state.showEditor ? <MenteeEditModal 
+                    show={this.state.showEditor} 
+                    sessionId={this.state.selectedSession} 
+                    course={this.state.course[index]} 
+                    assignment={this.state.assignment[index]} 
+                    logout={this.state.logout[index]} 
+                    toggle={() => this.toggleEditor()} /> : <></>}
             </>
+            
         );
     };
 }

@@ -1,26 +1,25 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
-import '../styles/login.scss';
 
 const Login = () => {
     document.title="Login Page";
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
-    let history = useHistory();
+    const [loading, setLoading] = useState(false);
 
     const login = () => {
         const data = {email:email, password:password};
         axios.post("http://localhost:4002/auth/login", data).then((response)=>{
-            if(response.status != 200) {
+            if(response.status !== 200) {
                 alert(response.data.message);
+                setLoading(false);
             } else {
                 console.log(response.data.data.accessKey);
                 sessionStorage.setItem("accessKey", response.data.data.accessKey);
                 axios.post("http://localhost:4002/api/session/start/user", {accessKey: sessionStorage.getItem("accessKey")}).then(res => {
-                    if (response.status != 200) {
+                    if (response.status !== 200) {
                         alert(response.data.message);
+                        setLoading(false);
                         sessionStorage.removeItem("accessKey");
                     } else {
                         window.location.href = response.data.data.redirect_url;
@@ -28,17 +27,18 @@ const Login = () => {
                 }).catch(err => {
                     sessionStorage.removeItem("accessKey");
                     alert(err.response.data.message);
+                    setLoading(false);
                 });
             }
         }).catch(err => {
             alert(err.response.data.message);
+            setLoading(false);
         });
+        setLoading(true);
     };
 
-
-
     return (
-        <div id="login">
+        <div className="masto-bg">
             <div className='animate modal columns is-flex-mobile p-5'>
                 <div className="modal-card card">
                     <p className="modal-card-head modal-card-title is-justify-content-center">Mentor Login</p>
@@ -52,7 +52,7 @@ const Login = () => {
                             }}/>
                         </div>
                         <div className="content control">
-                            <button onClick={login} className="button is-primary is-fullwidth">Login</button>
+                            <button onClick={login} className={"button is-primary is-fullwidth " + (loading ? "is-loading" : "")}>Login</button>
                         </div>
                     </div>
                 </div>

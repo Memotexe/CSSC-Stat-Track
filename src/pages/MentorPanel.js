@@ -1,9 +1,7 @@
-import React, { useState, setState, Component } from "react";
-import { Redirect } from "react-router-dom";
+import React from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import DataGrid from "../components/DataGrid";
-import { render } from "sass";
 import MenteeEditModal from "../components/MenteeEditModal";
 
 
@@ -53,7 +51,6 @@ class MentorPanel extends React.Component {
 
         axios.post('http://localhost:4002/api/session/list/mentees', { accessKey: sessionStorage.getItem("accessKey") }).then(res => {
             var mentee_sessions = res.data.data;
-            console.log(mentee_sessions)
             let name = [];
             let email = [];
             let course = [];
@@ -75,9 +72,9 @@ class MentorPanel extends React.Component {
                 sessionId.push(mentee_sessions[i].mentee_session_id);
                 mentor.push(mentee_sessions[i].user_session.user.firstname + " " + mentee_sessions[i].user_session.user.lastname);
                 action.push(<>
-                                <button className="datagrid-button" onClick={() => this.toggleEditor(i, sessionId[i])}>Edit</button>
+                                <button className="button is-small m-1 is-secondary" onClick={() => this.toggleEditor(i, sessionId[i])}>Edit</button>
                                 {console.log(this.state.logout[i] )}
-                                {logout[i] == undefined ? <button className="datagrid-button" onClick={()=>this.signOutMentee(sessionId[i])}>Signout</button> : <></>}
+                                { logout[i] === null ? <button className="button is-small m-1 is-secondary" onClick={()=>this.signOutMentee(sessionId[i])}>Signout</button> : <></>}
                             </>
                     );
             }
@@ -104,10 +101,11 @@ class MentorPanel extends React.Component {
             <>
                 <Navbar
                     buttons={[
-                        {text: "Mentee SignIn", action: () => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/menteeSignIn")}
+                        {text: "Mentee SignIn", action: () => (!sessionStorage.getItem("accessKey") ? window.location.reload() : window.location.href = "/menteeSignIn")}
                     ]} 
                 />
-                <DataGrid columns={[
+                <DataGrid tableName="Mentee Sessions"
+                    columns={[
                         "Name",
                         "Email",
                         "Course",

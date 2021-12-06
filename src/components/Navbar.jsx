@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import '../styles/navbar.scss';
-import '../styles/style.scss';
 import axios from "axios";
 
 
@@ -23,23 +21,22 @@ const Navbar = (props) => {
     });
     setLoading(true);
   }
-  //https://bulma.io/images/bulma-logo.png
   return(
     <nav className="navbar has-background-black-ter" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
         <a className="navbar-item" href="https://www.pfw.edu/">
-          <img src="./logo.png" width="100%" height="100%"/>
+          <img src="./logo.png" width="100%" height="100%" alt="Purdue Fort Wayne"/>
         </a>
       </div>
       <div id="navbarMain" className="navbar-menu">
         <div className="navbar-end">
           {props.buttons.map((component, index) => {
               if(component.text) {
-                return <button className="button is-justify-content-center navbar-item is-align-self-center mr-2 is-primary" onClick={() => component.action()}><span>{component.text}</span></button>
-              }
+                return <button key={index} className="button is-justify-content-center navbar-item is-align-self-center mr-2 is-primary" onClick={() => component.action()}><span>{component.text}</span></button>
+              } else return <></>
           })}
           <button className={"button is-align-self-center is-justify-content-center mr-2 is-primary " + (loading ? "is-loading" : "")} onClick={() => logout()}>
-            <span className="pr-1">Log out</span>
+            <span className="pr-1">Logout</span>
             <span className="fas fa-sign-out-alt"></span>
           </button>
         </div>

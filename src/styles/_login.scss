@@ -1,4 +1,4 @@
-#login {
+.masto-bg {
     width: 100%;
     height: 100vh;
     background-color:lightgray;
@@ -15,7 +15,7 @@
         background: url("http://localhost:3000/Mastadon.svg");
         background-repeat: no-repeat;
         content: "";
-        background-size: 74em;
+        background-size: 120vh;
         background-position: center;
         position: absolute;
         top:0px;

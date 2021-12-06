@@ -1,15 +1,9 @@
-import React, { useState, setState, Component } from "react";
+import React from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import DataGrid from "../components/DataGrid";
-import { render } from "sass";
-import Login from "./Login";
-import { useHistory } from "react-router";
 import UserEditModal from "../components/UserEditModal";
 import UserCreationModal from "../components/UserCreationModal";
-import MenteeCreationModal from "../components/MenteeCreationModal";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class AdminPanel extends React.Component {
     constructor(props) {
@@ -45,7 +39,6 @@ class AdminPanel extends React.Component {
 
     componentDidMount() {
         document.title="Admin Panel";
-        console.log("adminpanel.js: " + "HELLO");
         axios.post('http://localhost:4002/api/list/users', { accessKey: sessionStorage.getItem("accessKey")}).then(response => {
             return response.data;
         }).then((res) => {
@@ -62,7 +55,7 @@ class AdminPanel extends React.Component {
                 combinedNames.push(data[i].firstname + " " + data[i].lastname);
                 emails.push(data[i].email);
                 actives.push(data[i].active);
-                edits.push(<button className="datagrid-button" onClick={() => this.toggleEditor(i)}>Edit</button>)
+                edits.push(<button className="button is-small m-1 is-secondary" onClick={() => this.toggleEditor(i)}>Edit</button>)
             }
             this.setState({
                 firstNames: firstNames,
@@ -77,47 +70,47 @@ class AdminPanel extends React.Component {
         });
     }
 
-    testShit() {
-        toast.success("Hello", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-        });
-        return <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                />
-    }
+    // testShit() {
+    //     toast.success("Hello", {
+    //         position: "top-right",
+    //         autoClose: 3000,
+    //         hideProgressBar: false,
+    //         closeOnClick: true,
+    //         pauseOnHover: false,
+    //         draggable: false,
+    //         progress: undefined,
+    //     });
+    //     return <ToastContainer
+    //                 position="top-right"
+    //                 autoClose={5000}
+    //                 hideProgressBar={false}
+    //                 newestOnTop={false}
+    //                 closeOnClick
+    //                 rtl={false}
+    //                 pauseOnFocusLoss
+    //                 draggable
+    //                 pauseOnHover
+    //             />
+    // }
 
     render() {
         const index = this.state.selectedIndex;
         return (
             <>
-                <Navbar
+                <Navbar 
                     buttons={[
                         {text: "Add User", action: () => this.setState({showCreation: true})},
-                        {text: "Test toast", action: () => this.testShit()},
+                        // {text: "Test toast", action: () => this.testShit()},
                         {text: "Mentor Panel", action: () => (sessionStorage.getItem("accessKey") == null ? window.location.reload() : window.location.href = "/mentorPanel")}
                     ]} 
                 />
-
-                <DataGrid columns={[
+                <DataGrid  tableName="Users"
+                    columns={[
                     "Name",
                     "Email",
                     "Active",
                     "Actions"
-                ]}
+                    ]}
                     data={[
                         this.state.combinedNames,
                         this.state.emails,

@@ -7,6 +7,7 @@ const EditModal = (props) => {
     const [last, setLast] = useState(props.lastName);
     const [email, setEmail] = useState(props.email);
     const [active, setActive] = useState(props.active);
+    const [loading, setLoading] = useState(false);
 
     if (!props.show) {
         return <></>
@@ -15,12 +16,18 @@ const EditModal = (props) => {
     const onSubmission = () => {
         axios.post("http://localhost:4002/api/edit/user", {accessKey: sessionStorage.getItem("accessKey"), firstName:first, lastName:last, email:email, active:active, oldEmail:props.email}).then((response)=>{
             if(response.status !== 200) {
-                console.log(response);
+                setLoading(false);
+                alert(response.data.message);
             } else {
+                setLoading(false);
                 props.toggle();
                 window.location.reload();
             }
+        }).catch(err => {
+            setLoading(false);
+            alert(err.response.data.message);
         });
+        setLoading(true);
     }
 
     return (
@@ -41,16 +48,14 @@ const EditModal = (props) => {
                             setEmail(event.target.value);
                         }}/>
                     </div>
-                    <div className="content control level-item">
-                        <label className="checkbox level-item">
-                            <div className="is-fullwidth">
-                                <p className="mb-auto px-2">Active</p>
-                                <input id="active" name="active" type="checkbox" defaultChecked={props.active} onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
-                            </div>
-                        </label>
+                    <div className="content control">
+                        <div className="is-checkbox">
+                            <input id="active" name="active" type="checkbox" defaultChecked={props.active} onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
+                            <p className="mb-auto px-2">Active</p> 
+                        </div>
                     </div>
                     <div className="content control level-item">
-                        <button onClick={() => onSubmission()} className="button is-primary mx-1 is-fullwidth">Save Changes</button>
+                        <button onClick={() => onSubmission()} className={"button is-primary mx-1 is-fullwidth " + (loading ? "is-loading" : "")}>Save Changes</button>
                         <button onClick={() => props.toggle()} className="button is-secondary mx-1 is-fullwidth">Cancel</button>
                     </div>
                 </div>

@@ -1,5 +1,4 @@
-import './styles/base.scss';
-import 'bulma/css/bulma.min.css'
+import './styles/style.scss';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login'
 import PrivateRoute from './components/PrivateRoute';

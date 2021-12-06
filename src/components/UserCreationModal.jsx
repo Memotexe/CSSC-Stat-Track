@@ -8,6 +8,7 @@ const UserCreationModal = (props) => {
     const [password, setPassword] = useState("");
     const [active, setActive] = useState(0);
     const [adminUser, setAdmin] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     if (!props.show) {
         return <></>
@@ -18,19 +19,22 @@ const UserCreationModal = (props) => {
         const data = { email:email, password: password, firstName:first, lastName:last, active:active, accessLevel: adminUser, accessKey: sessionStorage.getItem("accessKey")};
         axios.post("http://localhost:4002/api/create/user", data).then((response)=>{
             if(response.status !== 200) {
+                setLoading(false);
                 alert(response.data.error);
             } else {
+                setLoading(false);
                 props.toggle();
                 window.location.reload();
             }
         }).catch(err => {
+            setLoading(false);
             alert(err.response.data.message);
         });
-
+        setLoading(true);
     }
 
     return (
-        <div className={'animate modal columns is-flex-mobile p-5 '  }>
+        <div className={'animate modal columns is-flex-mobile p-5 ' }>
             <div className="modal-card card">
                 <p className="modal-card-head modal-card-title is-justify-content-center">User Creation</p>
                 <div className="modal-card-body">
@@ -49,21 +53,17 @@ const UserCreationModal = (props) => {
                         }}/>
                     </div>
                     <div className="content control level-item">
-                        <label className="checkbox level-item">
-                            <div className="is-fullwidth">
-                                <p className="mb-auto px-2">Active</p>
-                                <input id="active" name="active" type="checkbox" onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
-                            </div>
-                        </label>
-                        <label className="checkbox level-item">
-                            <div className="is-fullwidth">
-                                <p className="mb-auto px-2">Admin User</p>
-                                <input id="admin" name="admin" type="checkbox"  onChange={(event) => setAdmin(event.target.checked ? 1 : 0)}/>
-                            </div>
-                        </label>
+                        <div className="is-checkbox">
+                            <input id="active" name="active" type="checkbox" onChange={(event) => setActive(event.target.checked ? 1 : 0)}/>
+                            <p className="mb-auto px-2">Active</p>
+                        </div>
+                        <div className="is-checkbox">
+                            <input id="admin" name="admin" type="checkbox"  onChange={(event) => setAdmin(event.target.checked ? 1 : 0)}/> 
+                            <p className="mb-auto px-2">Admin User</p> 
+                        </div>
                     </div>
                     <div className="content control level-item">
-                        <button onClick={() => addUser()} className="button is-primary mx-1 is-fullwidth">Add User</button>
+                        <button onClick={() => addUser()} className={"button is-primary mx-1 is-fullwidth " + (loading ? "is-loading" : "")}>Add User</button>
                         <button onClick={() => props.toggle()} className="button is-secondary mx-1 is-fullwidth">Cancel</button>
                     </div>
                 </div>

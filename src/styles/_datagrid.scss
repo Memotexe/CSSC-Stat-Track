@@ -1,0 +1,73 @@
+#table {
+    background-color: rgb(235, 235, 235);
+    border-radius: 20px;
+    min-height: 50px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    >h1 {
+        text-align: center;
+    }
+
+    >div {
+        flex: 1;
+        overflow: auto;
+    }
+
+}
+
+.table {
+    text-align: center;
+    justify-self: center;
+    border-radius: 5px;
+
+    thead {
+        top: 0;
+        position: sticky;
+        z-index: 20;
+        
+        th:first-child {
+            border-top-left-radius: 5px
+        }
+
+        th:last-child {
+            border-top-right-radius: 5px
+        }
+
+        th {
+            background-color: rgb(43, 43, 43);
+            color: white;
+            width: 100%;
+            text-overflow: ellipsis;
+        }
+    }
+
+    tbody > tr {
+        &:last-child {
+            td:first-child {
+                border-bottom-left-radius: 5px
+            }
+
+            td:last-child {
+                border-bottom-right-radius: 5px
+            }
+        }
+
+        &:nth-child(even) {
+            background-color: #cfb991ff;
+        }   
+        width: 100%;
+        text-overflow: ellipsis;
+    }
+}
+
+.datagrid-button{
+    box-shadow: none;
+    width: 60%;
+    background-color: white;
+    border-width: .5px;
+    height: 100%;
+    cursor: pointer;
+    &:hover{background-color: #f0f1f5;}
+}

@@ -1,10 +1,150 @@
 @import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "login";
+@import "datagrid";
+
+
+$pfw-gray: #6f727b;
+$pfw-gold: #cfb991;
+$progress-bar-background-color: lightgrey;
+$progress-border-radius: 0px;
+$primary: $pfw-gray;
+$primary-light: $pfw-gold;
+$body-overflow-y: auto;
+
+@import "~bulma/sass/utilities/derived-variables";
 @import "~bulma/sass/utilities/initial-variables";
 @import "~bulma/sass/utilities/functions";
+@import "~bulma";
 
-$primary: #cfb991ff;;
+body{
+    background-color: lightgrey;
+    width: 100%;
+    height: 100vh;
+}
 
-html {
-    overflow: hidden;
+#root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.is-checkbox {
+    width: 50%;
+    display: inline-flex;
+    align-items: center;
+    &>input {
+        height: 20px;
+        width: 20px;
+    }
+}
+
+.is-fullheight {
+    height: 100%;
+}
+
+.is-secondary {
+    background-color: rgb(238, 238, 238);
+    border-color: lightgray;
+    transition: .2s;
+
+    &:hover {
+        background-color: lightgray;
+        border-color: lightgray;
+        transition: .2s;
+    }
+
+    &:focus {
+        transition: .2s;
+        box-shadow: 0 0 0 0.125em rgb(lightgray, 30%);
+    }
+}
+
+.is-primary:not(input) {
+    background-color: $pfw-gray !important;
+    transition: .2s;
+
+    &:hover {
+        background-color: $pfw-gold !important;
+        border-color: $pfw-gold;
+        transition: .2s;
+        color: #000 !important;
+    }
+
+    &:focus {
+        transition: .2s;
+        border-color: $pfw-gold;
+        box-shadow: 0 0 0 0.125em rgb($pfw-gold, 30%);
+    }
+}
+
+input.is-primary {
+    transition: .2s;
+    &:hover {
+        border-color: $pfw-gold;
+        transition: .2s;
+    }
+
+    &:focus {
+        transition: .2s;
+        border-color: $pfw-gold;
+        box-shadow: 0 0 0 0.125em rgb($pfw-gold, 30%);
+    }
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    z-index: 50;
+
+    &-track {
+        border-radius: 5px;
+        background-color: lightgrey;
+    }
+    
+    &-corner {
+        background: transparent;
+    }
+
+    &-thumb {
+        border-radius: 5px;
+        background-color: $pfw-gray;
+
+        &:hover {
+            background-color: rgb(154, 158, 170);
+            box-shadow: 0px 0px 2px $pfw-gray;
+        }
+    }
+
+    
+}
+
+.animate {
+    opacity: 0;
+    animation-delay: 1s;
+    animation: fadeIn 0.3s ease-out !important;
+    animation-fill-mode: forwards !important;
+}
+
+@keyframes slideFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-2rem);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0rem);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(.98);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
